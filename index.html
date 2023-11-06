@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+    .quiz-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .options {
+      list-style-type: none;
+      padding: 0;
+    }
+    .options li {
+      margin: 10px 0;
+      background-color: #e0e0e0;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    .options li:hover {
+      background-color: #ddd;
+    }
+    .feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .button-container {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #prevButton {
+      background-color: #ccc;
+    }
+    #prevButton:hover {
+      background-color: #999;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-container {
+        padding: 10px;
+      }
+      .question {
+        font-size: 16px;
+      }
+      .options li {
+        padding: 8px;
+        font-size: 14px;
+      }
+      button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz Game</h1>
+    <div class="question"></div>
+    <ul class="options"></ul>
+    <p class="feedback"></p>
+    <div class="button-container">
+      <button id="prevButton">Previous</button>
+      <button id="nextButton">Next</button>
+      <button id="submitButton">Submit</button>
+    </div>
+    <p>Score: <span id="score">0</span></p>
+  </div>
+
+  <script>
+const questions = [
+      {
+        question: "What is the capital of France?",
+        options: ["Paris", "London", "Berlin", "Madrid"],
+        answer: "Paris",
+      },
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Venus", "Jupiter"],
+        answer: "Mars",
+      },
+      {
+        question: "How many continents are there?",
+        options: ["5", "6", "7", "8"],
+        answer: "7",
+      },
+    ];
+
+    const questionElement = document.querySelector(".question");
+    const optionsList = document.querySelector(".options");
+    const feedbackElement = document.querySelector(".feedback");
+    const prevButton = document.getElementById("prevButton");
+    const nextButton = document.getElementById("nextButton");
+    const submitButton = document.getElementById("submitButton");
+    const scoreElement = document.getElementById("score");
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function showQuestion(index) {
+      const question = questions[index];
+      questionElement.textContent = question.question;
+      optionsList.innerHTML = "";
+
+      question.options.forEach((option, i) => {
+        const li = document.createElement("li");
+        li.textContent = option;
+        li.addEventListener("click", () => checkAnswer(i));
+        optionsList.appendChild(li);
+      });
+
+      if (index === 0) {
+        prevButton.disabled = true;
+      } else {
+        prevButton.disabled = false;
+      }
+
+      if (index === questions.length - 1) {
+        nextButton.disabled = true;
+      } else {
+        nextButton.disabled = false;
+      }
+
+      feedbackElement.textContent = "";
+    }
+
+    function checkAnswer(selectedOption) {
+      const correctOption = questions[currentQuestion].options.findIndex(
+        (option) => option === questions[currentQuestion].answer
+      );
+
+      if (selectedOption === correctOption) {
+        feedbackElement.textContent = "Correct!";
+        score++;
+      } else {
+        feedbackElement.textContent = "Incorrect!";
+      }
+    }
+
+    prevButton.addEventListener("click", () => {
+      currentQuestion--;
+      showQuestion(currentQuestion);
+    });
+
+    nextButton.addEventListener("click", () => {
+      currentQuestion++;
+      showQuestion(currentQuestion);
+    });
+
+    submitButton.addEventListener("click", () => {
+      submitButton.disabled = true;
+      prevButton.disabled = true;
+      nextButton.disabled = true;
+
+      scoreElement.textContent = score + " / " + questions.length;
+    });
+
+    showQuestion(currentQuestion);  </script>
+</body>
+</html>
